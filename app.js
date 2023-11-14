@@ -40,11 +40,9 @@ app.post('/convert', upload.single('postmanCollection'), async (req, res) => {
     const filename = req.file.originalname;
     const uniqueFileName = generateUniqueFileName(filename);
     const finalFilePath = path.join(__dirname, 'uploads/', `${uniqueFileName}`);
-    // uniqueFileName = uniqueFileName.split('.')[0];
     const outputFile = path.join(__dirname, 'converted_files/', `${uniqueFileName}.yml`);
 
     try {
-        // Rename the uploaded file with a unique name
         fs.rename(tempFilePath, finalFilePath, async (err) => {
             if (err) {
                 return res.status(500).send('Error saving the file');

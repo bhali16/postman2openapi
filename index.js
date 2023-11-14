@@ -31,6 +31,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+app.get('/test', (req, res) => {
+    res.send('Hello World!');
+});
+
 app.post('/convert', upload.single('postmanCollection'), async (req, res) => {
     if (!req.file) {
         return res.status(400).send('No file uploaded');

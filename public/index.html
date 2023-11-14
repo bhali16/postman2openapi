@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Postman to OpenAPI Converter</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        #fileInput {
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Postman to OpenAPI Converter</h1>
+    <input type="file" id="fileInput" accept=".json">
+    <button onclick="convert()">Convert</button>
+
+    <script>
+        async function convert() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('postmanCollection', file);
+
+            try {
+                const response = await fetch('/convert', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const result = await response.text();
+                    console.log(`Conversion successful! OpenAPI specs: ${result}`);
+                    alert(`Conversion successful! OpenAPI`);
+                } else {
+                    throw new Error('Conversion failed');
+                    alert(`Conversion failed`);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -32,12 +32,19 @@
         button:hover {
             background-color: #2980b9;
         }
+        #downloadButton {
+            display: none;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
-    <h1>Postman to OpenAPI Converter</h1>
+    <h1>Postman2OpenAPI</h1>
+    <i>Convert Postman Collection to OpenAPI File</i>
+    <hr>
     <input type="file" id="fileInput" accept=".json">
     <button onclick="convert()">Convert</button>
+    <button id="downloadButton" onclick="download()">Download OpenAPI</button>
 
     <script>
         async function convert() {
@@ -56,6 +63,7 @@
                     const result = await response.text();
                     console.log(`Conversion successful! OpenAPI specs: ${result}`);
                     alert(`Conversion successful! OpenAPI`);
+                    showDownloadButton(result);
                 } else {
                     throw new Error('Conversion failed');
                     alert(`Conversion failed`);
@@ -63,6 +71,32 @@
             } catch (err) {
                 console.error(err);
             }
+        }
+
+        function showDownloadButton(data) {
+            const downloadButton = document.getElementById('downloadButton');
+            downloadButton.dataset.openApiData = data;
+            downloadButton.style.display = 'block';
+        }
+
+        function download() {
+            const openApiData = document.getElementById('downloadButton').dataset.openApiData;
+            const blob = new Blob([openApiData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            const fileName = document.getElementById('fileInput').files[0].name;
+            const name = fileName.replace(/.json/g, ".yml");
+            a.download = `${name}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            //remove file from input and hide download button
+            document.getElementById('fileInput').value = '';
+            document.getElementById('downloadButton').style.display = 'none';
         }
     </script>
 </body>

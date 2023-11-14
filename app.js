@@ -15,7 +15,7 @@ app.use(cors()); // Allowing all CORS requests - adjust according to your requir
 const generateUniqueFileName = (filename) => {
 
     const uniqueSuffix = Date.now();
-    return `${filename}_openapi_${uniqueSuffix}`;
+    return `openapi_${uniqueSuffix}_${filename}`;
 };
 
 app.get('/', (req, res) => {
@@ -30,8 +30,9 @@ app.post('/convert', upload.single('postmanCollection'), async (req, res) => {
     const tempFilePath = req.file.path;
     const filename = req.file.originalname;
     const uniqueFileName = generateUniqueFileName(filename);
-    const finalFilePath = path.join(__dirname, 'uploads/', `${uniqueFileName}.json`);
-    const outputFile = path.join(__dirname, 'api/', `${uniqueFileName}.yml`);
+    const finalFilePath = path.join(__dirname, 'uploads/', `${uniqueFileName}`);
+    // uniqueFileName = uniqueFileName.split('.')[0];
+    const outputFile = path.join(__dirname, 'converted_files/', `${uniqueFileName}.yml`);
 
     try {
         // Rename the uploaded file with a unique name
@@ -51,46 +52,6 @@ app.post('/convert', upload.single('postmanCollection'), async (req, res) => {
     }
 });
 
-// app.post('/convert', upload.single('postmanCollection'), async (req, res) => {
-//     if (!req.file) {
-//         return res.status(400).send('No file uploaded');
-//     }
-
-//     const tempFilePath = req.file.path;
-//     const uniqueFileName = generateUniqueFileName();
-//     const finalFilePath = path.join(__dirname, 'uploads/', `${uniqueFileName}.json`);
-//     const outputFile = path.join(__dirname, 'api/', `${uniqueFileName}.yml`);
-
-//     try {
-//         // Rename the uploaded file with a unique name
-//         fs.rename(tempFilePath, finalFilePath, async (err) => {
-//             if (err) {
-//                 return res.status(500).send('Error saving the file');
-//             }
-//             try {
-//                 const result = await postmanToOpenApi(finalFilePath, outputFile, { defaultTag: 'General' });
-
-//                 // Sending the converted file for download
-//                 res.download(outputFile, 'converted_file.yml', (err) => {
-//                     if (err) {
-//                         res.status(500).send('Error downloading the file');
-//                     }
-//                     // Clean up: remove the uploaded and converted files
-//                     fs.unlink(finalFilePath, (err) => {
-//                         if (err) console.error(err);
-//                     });
-//                     fs.unlink(outputFile, (err) => {
-//                         if (err) console.error(err);
-//                     });
-//                 });
-//             } catch (err) {
-//                 res.status(500).send(err.message);
-//             }
-//         });
-//     } catch (err) {
-//         res.status(500).send('Conversion process error');
-//     }
-// });
 
 
 app.listen(3000, () => {

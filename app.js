@@ -5,6 +5,14 @@ const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
 
+if (!fs.existsSync('./uploads')) {
+    fs.mkdirSync('./uploads');
+}
+if (!fs.existsSync('./converted_files')) {
+    fs.mkdirSync('./converted_files');
+}
+
+
 const app = express();
 const upload = multer({ dest: 'uploads/' });
 

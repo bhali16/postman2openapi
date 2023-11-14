@@ -130,6 +130,8 @@ dist
 .pnp.*
 
 
+index.js
+
 uploads/*
 !uploads/.gitkeep
 converted_files/*
